@@ -1,22 +1,22 @@
-# Currency Converter Application
+# Currency Exchange Application
 
 ## Created in Java for CPSC 210
 
-For this project, I will create a currency converter app.
-Users will be able to use this app to convert an amount of money from one currency to another.
-Users will be able to select **31 unique source and target currencies**, enter the amount they want to convert in the "from" currency section, and the app will display the converted amount in the "to" currency section.
-This app will be useful for users such as international students, travelers, and people interested in currency exchange rates.
+I am creating a currency exchange app for this project.
+Users use this app to convert an amount of money from one currency (e.g. CAD) to another (e.g. USD).
+Users select two currencies from **31 unique selections**, enter the amount they want to convert in the "from" currency section, and the app will automatically display the converted amount in the "to" currency section.
+This app is useful to users such as international students, travelers, and people interested in exchanging currency.
 
-This project is interesting to me because it's an opportunity to apply my knowledge of JUnit testing, data structures, file reading, and GUI in Java. 
-It's also an opportunity to create an app that could be useful in everyday life.
+This project is interesting to me because it's an opportunity to apply my knowledge of JUnit testing, data structures, and GUI in Java. 
+Also, it's an opportunity to create an app that's useful for different groups of people.
 
 
 ## User Stories
 
--  As a user, I want to be able to add a currency name to my list of tracked currency names.
+-  As a user, I want to be able to add an exchange to a list that shows the history of exchanges.
 
--  As a user, I want to be able to view a list of all the currency names I am tracking.
+-  As a user, I want to be able to view the list of all the past currency exchanges.
 
--  As a user, I want to be able to select two currency names from my list for the "from" and "to" currency sections, respectively, manually enter an amount of money in the "from" currency section, and then automatically see the equivalent amount of money in the "to" currency section.
+-  As a user, I want to be able to select two currency names for the "from" and "to" currency selections, respectively, manually enter an amount in the "from" currency section, and then see the converted amount in the "to" currency section.
 
--  As a user, I want to be able to remove a currency name from my list of tracked currency names.
+-  As a user, I want to be able to clear the history of currency exchanges.
