@@ -15,7 +15,7 @@ Also, it's an opportunity to create an app that's useful for different groups of
 
 -  As a user, I want to be able to add an exchange to a list that shows the history of exchanges.
 
--  As a user, I want to be able to view the list of all the past currency exchanges.
+-  As a user, I want to be able to view the list of all my past currency exchanges.
 
 -  As a user, I want to be able to select two currency names for the "from" and "to" currency selections, respectively, manually enter an amount in the "from" currency section, and then see the converted amount in the "to" currency section.
 
