@@ -23,11 +23,11 @@ public class ExchangeRates {
         excRates.put("Czech Koruna (CZK)", 0.03516649027110641);
         excRates.put("Danish Krone (DKK)", 0.11586020063301324);
         excRates.put("Hungarian Forint (HUF)", 0.002230109969538954);
-        excRates.put("Polish Złoty (PLN)", 0.1895972786129705);
+        excRates.put("Polish Zloty (PLN)", 0.1895972786129705);
         excRates.put("Romanian Leu (RON)", 0.1739839690659363);
         excRates.put("Swedish Krona (SEK)", 0.07447092797724236);
         excRates.put("Swiss Franc (CHF)", 0.9009281468349151);
-        excRates.put("Icelandic Króna (ISK)", 0.005904989747095009);
+        excRates.put("Icelandic Krona (ISK)", 0.005904989747095009);
         excRates.put("Norwegian Krone (NOK)", 0.07514460922889575);
         excRates.put("Turkish Lira (TRY)", 0.029445146953062953);
         excRates.put("Australian Dollar (AUD)", 0.5223727173781594);
