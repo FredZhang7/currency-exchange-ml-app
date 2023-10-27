@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 // Represents a list of exchanges done in the past, with each element being an Exchange object
@@ -8,7 +11,7 @@ public class ExchangeHistory {
 
     /**
      * MODIFIES: this
-     * EFFECTS: initialize history as an empty arraylist
+     * EFFECTS: initializes history as an empty arraylist
      */
     public ExchangeHistory() {
         history = new ArrayList<>();
@@ -17,7 +20,7 @@ public class ExchangeHistory {
     /**
      * REQUIRES: the Exchange object has already completed an exchange
      * MODIFIES: this
-     * EFFECTS: add an exchange to history
+     * EFFECTS: adds an exchange to history
      */
     public void add(Exchange exc) {
         history.add(exc);
@@ -25,32 +28,41 @@ public class ExchangeHistory {
 
     /**
      * MODIFIES: this
-     * EFFECTS: remove all Exchange items from history
+     * EFFECTS: removes all Exchange items from history
      */
     public void clear() {
         history.clear();
     }
 
-    public ArrayList<Exchange> getHistory() {
-        return this.history;
+    /**
+     * EFFECTS: adds exchanges to a JSONObject and returns it
+     */
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("exchanges", exchangesToJsonArray());
+        return json;
     }
 
     /**
-     * EFFECTS: prints the exchange history in console
+     * EFFECTS: parses the list of exchange objects in history to a JSONArray of JSONObjects and returns it
      */
-    public void view() {
-        if (history.size() == 0) {
-            System.out.println("No exchange was recorded.");
-        } else {
-            System.out.println("Exchange History:");
-            for (Exchange exc : history) {
-                System.out.println("----------------------------------------");
-                System.out.println("From Currency: " + exc.getFromCurrency());
-                System.out.println("From Value: " + exc.getFromValue());
-                System.out.println("To Currency: " + exc.getToCurrency());
-                System.out.println("To Value: " + exc.getToValue());
-                System.out.println("----------------------------------------");
-            }
+    private JSONArray exchangesToJsonArray() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Exchange exc : history) {
+            JSONObject exchangeJson = new JSONObject();
+            exchangeJson.put("fromCurrency", exc.getFromCurrency());
+            exchangeJson.put("toCurrency", exc.getToCurrency());
+            exchangeJson.put("fromValue", exc.getFromValue());
+            exchangeJson.put("toValue", exc.getToValue());
+            exchangeJson.put("excRates", exc.getExcRates());
+            jsonArray.put(exchangeJson);
         }
+
+        return jsonArray;
+    }
+
+    public ArrayList<Exchange> getHistory() {
+        return this.history;
     }
 }

@@ -14,10 +14,10 @@ public class Exchange {
     /**
      * REQUIRES: fromCurrency and toCurrency are valid key values of excRates
      * MODIFIES: this
-     * EFFECTS: initialize fromCurrency and toCurrency using values from the two String type parameters,
-     *          initialize toValue using the only double type parameter,
-     *          initialize rates to contain 31 currency names and standardized value pairs,
-     *          and lastly initialize exchange rates
+     * EFFECTS: initializes fromCurrency and toCurrency with values from the two String type parameters,
+     *          initializes toValue using the only double type parameter,
+     *          initializes rates to contain 31 currency names and standardized value pairs,
+     *          and lastly initializes exchange rates
      */
     public Exchange(String fromCurrency, String toCurrency, double fromValue, HashMap<String, Double> excRates) {
         this.fromCurrency = fromCurrency;
@@ -53,5 +53,13 @@ public class Exchange {
 
     public double getToValue() {
         return this.toValue;
+    }
+
+    public HashMap<String, Double> getExcRates() {
+        return this.excRates;
+    }
+
+    public void setToValue(double toValue) {
+        this.toValue = toValue;
     }
 }

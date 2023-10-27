@@ -1,0 +1,43 @@
+{
+  "exchanges": [
+    {
+      "fromCurrency": "British Pound Sterling (GBP)",
+      "toCurrency": "United States Dollar (USD)",
+      "fromValue": 100.0,
+      "toValue": 81.63863163863163,
+      "excRates": {
+        "British Pound Sterling (GBP)": 1.0,
+        "United States Dollar (USD)": 0.8163863163863163,
+        "Japanese Yen (JPY)": 0.005477775664193774,
+        "Bulgarian Lev (BGN)": 0.441711831475611,
+        "Czech Koruna (CZK)": 0.03516649027110641,
+        "Danish Krone (DKK)": 0.11586020063301324,
+        "Hungarian Forint (HUF)": 0.002230109969538954,
+        "Polish Zloty (PLN)": 0.1895972786129705,
+        "Romanian Leu (RON)": 0.1739839690659363,
+        "Swedish Krona (SEK)": 0.07447092797724236,
+        "Swiss Franc (CHF)": 0.9009281468349151,
+        "Icelandic Krona (ISK)": 0.005904989747095009,
+        "Norwegian Krone (NOK)": 0.07514460922889575,
+        "Turkish Lira (TRY)": 0.029445146953062953,
+        "Australian Dollar (AUD)": 0.5223727173781594,
+        "Brazilian Real (BRL)": 0.1593558621707371,
+        "Canadian Dollar (CAD)": 0.6004726489191631,
+        "Chinese Yuan (CNY)": 0.11184908982625134,
+        "Hong Kong Dollar (HKD)": 0.104406361790583,
+        "Indonesian Rupiah (IDR)": 5.190225146067078e-05,
+        "Israeli New Shekel (ILS)": 0.2067290435282012,
+        "Indian Rupee (INR)": 0.00980762790275247,
+        "South Korean Won (KRW)": 0.0006051414962174278,
+        "Mexican Peso (MXN)": 0.04487186146286735,
+        "Malaysian Ringgit (MYR)": 0.17259704713004215,
+        "New Zealand Dollar (NZD)": 0.49051782875312283,
+        "Philippine Peso (PHP)": 0.01436290483474097,
+        "Singapore Dollar (SGD)": 0.5974412171507607,
+        "Thai Baht (THB)": 0.022232802326479142,
+        "South African Rand (ZAR)": 0.04260345108173018,
+        "Euro (EUR)": 0.8639
+      }
+    }
+  ]
+}
