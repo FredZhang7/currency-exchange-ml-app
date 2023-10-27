@@ -23,7 +23,6 @@ public class ExchangeRates {
      * MODIFIES: this
      * EFFECTS: loads 31 standardized currency values to excRates
      */
-    @SuppressWarnings("methodlength")
     private void initializeExchangeRates() throws IOException {
         JsonReader jsonReader = new JsonReader("./data/exchange_rates.json");
         excRates = jsonReader.readHashMap();
