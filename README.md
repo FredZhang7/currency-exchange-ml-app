@@ -21,6 +21,6 @@ Also, it's an opportunity to create an app that's useful for different groups of
 
 -  As a user, I want to be able to clear the history of currency exchanges.
 
--  As a user, I want to be able to load the latest currency exchange rates and the history of currency exchanges from a JSON file (if I choose to do so).
+-  As a user, I want to be able to load the history of currency exchanges from a JSON file (if I choose to do so).
 
 -  As a user, I want to be able to save the updated history of exchanges to a JSON file (if I choose to do so).
