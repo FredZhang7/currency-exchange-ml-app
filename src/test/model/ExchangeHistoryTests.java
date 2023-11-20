@@ -71,4 +71,11 @@ class ExchangeHistoryTests {
         excHistory.clear();
         assertEquals(0, excHistory.getHistory().size());
     }
+
+    @Test
+    public void setHistoryTest() {
+        ExchangeHistory tmpHistory = new ExchangeHistory();
+        excHistory.setHistory(tmpHistory.getHistory());
+        assertEquals(tmpHistory.getHistory(), excHistory.getHistory());
+    }
 }

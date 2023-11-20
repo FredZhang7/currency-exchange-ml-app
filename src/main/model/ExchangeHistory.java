@@ -65,4 +65,8 @@ public class ExchangeHistory {
     public ArrayList<Exchange> getHistory() {
         return this.history;
     }
+
+    public void setHistory(ArrayList<Exchange> history) {
+        this.history = history;
+    }
 }
