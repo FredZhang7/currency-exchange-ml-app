@@ -1,13 +1,13 @@
 package ui;
 
 import model.ExchangeHistory;
-import model.ExchangeRates;
+import model.LocalExchangeRates;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
 // Represents Currency Exchange app's main window frame
 public class CurrencyExchangeUI extends JFrame {
@@ -28,7 +28,7 @@ public class CurrencyExchangeUI extends JFrame {
         setSize(900, 600);
 
         ExchangeHistory history = new ExchangeHistory();
-        HashMap<String, Double> rates = new ExchangeRates().getExcRates();
+        Map<String, Double> rates = new LocalExchangeRates().getExcRates();
 
         // Reference: https://stackoverflow.com/questions/71998881/replace-existing-font-definition-in-swing
         Font roboto = new Font("Roboto", Font.PLAIN, 14);

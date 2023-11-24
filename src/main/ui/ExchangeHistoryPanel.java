@@ -51,10 +51,10 @@ public class ExchangeHistoryPanel extends JPanel {
         reader = new JsonReader(historyPath);
         writer = new JsonWriter(historyPath);
 
-        initializeComponents();
-        changeFonts();
+        this.initializeComponents();
+        this.changeFonts();
 
-        setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
         JPanel cp = new JPanel();
         cp.add(displayButton);
@@ -63,8 +63,8 @@ public class ExchangeHistoryPanel extends JPanel {
         cp.add(loadButton);
         cp.add(saveButton);
         cp.add(clearButton);
-        add(new JScrollPane(historyArea), BorderLayout.CENTER);
-        add(cp, BorderLayout.SOUTH);
+        this.add(new JScrollPane(historyArea), BorderLayout.CENTER);
+        this.add(cp, BorderLayout.SOUTH);
     }
 
     /**

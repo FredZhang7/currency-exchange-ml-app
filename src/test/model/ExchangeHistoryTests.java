@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,11 +14,11 @@ class ExchangeHistoryTests {
     private Exchange exc3;
     private ExchangeHistory excHistory;
     // Source: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/HashMap.html
-    private HashMap<String, Double> excRates;
+    private Map<String, Double> excRates;
 
     @BeforeEach
     public void initialize() throws IOException {
-        excRates = new ExchangeRates().getExcRates();
+        excRates = new LocalExchangeRates().getExcRates();
         exc1 = new Exchange("British Pound Sterling (GBP)","United States Dollar (USD)", 0, excRates);
         exc2 = new Exchange("Indonesian Rupiah (IDR)", "British Pound Sterling (GBP)", 1000, excRates);
         exc3 = new Exchange("British Pound Sterling (GBP)","United States Dollar (USD)", 1, excRates);

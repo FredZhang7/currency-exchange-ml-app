@@ -2,11 +2,12 @@ package ui;
 
 import model.Exchange;
 import model.ExchangeHistory;
-import model.ExchangeRates;
+import model.LocalExchangeRates;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -14,7 +15,7 @@ import java.util.Scanner;
 public class ExchangeConsoleApp {
     private Scanner scanner;
     private ExchangeHistory excHistory;
-    private HashMap<String, Double> excRates;
+    private Map<String, Double> excRates;
     private JsonReader reader;
     private JsonWriter writer;
 
@@ -31,7 +32,7 @@ public class ExchangeConsoleApp {
         writer = new JsonWriter(historyPath);
 
         excHistory = new ExchangeHistory();
-        excRates = new ExchangeRates().getExcRates();
+        excRates = new LocalExchangeRates().getExcRates();
 
         roundStart();
         runCommandListener();

@@ -1,6 +1,6 @@
 package model;
 
-import java.util.HashMap;
+import java.util.Map;
 
 // Represents an exchange from one currency to another, containing currency names and exchanged values
 public class Exchange {
@@ -8,18 +8,14 @@ public class Exchange {
     private String toCurrency;
     private double fromValue;
     private double toValue;
-    // Source: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/HashMap.html
-    private HashMap<String, Double> excRates;
+    private Map<String, Double> excRates;
 
     /**
      * REQUIRES: fromCurrency and toCurrency are valid key values of excRates
      * MODIFIES: this
-     * EFFECTS: initializes fromCurrency and toCurrency with values from the two String type parameters,
-     *          initializes toValue using the only double type parameter,
-     *          initializes rates to contain 31 currency names and standardized value pairs,
-     *          and lastly initializes exchange rates
+     * EFFECTS: initializes all fields
      */
-    public Exchange(String fromCurrency, String toCurrency, double fromValue, HashMap<String, Double> excRates) {
+    public Exchange(String fromCurrency, String toCurrency, double fromValue, Map<String, Double> excRates) {
         this.fromCurrency = fromCurrency;
         this.toCurrency = toCurrency;
         this.fromValue = fromValue;
@@ -55,7 +51,7 @@ public class Exchange {
         return this.toValue;
     }
 
-    public HashMap<String, Double> getExcRates() {
+    public Map<String, Double> getExcRates() {
         return this.excRates;
     }
 

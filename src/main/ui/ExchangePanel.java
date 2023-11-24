@@ -10,7 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,27 +32,27 @@ public class ExchangePanel extends JPanel {
     private Font font;
 
     private ExchangeHistory history;
-    private HashMap<String, Double> rates;
+    private Map<String, Double> rates;
 
     /**
      * REQUIRES: fontSize > 0
      * MODIFIES: this
      * EFFECTS: initializes all field variables, adds an action listener, defines the panel's layout
      */
-    public ExchangePanel(ExchangeHistory history, HashMap<String, Double> rates, Font font) {
+    public ExchangePanel(ExchangeHistory history, Map<String, Double> rates, Font font) {
         this.history = history;
         this.rates = rates;
         this.font = font;
 
-        initializeComponents();
-        changeFonts();
+        this.initializeComponents();
+        this.changeFonts();
 
-        setLayout(new GridBagLayout());
+        this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1.0;
 
-        defineExchangeLayout(c);
+        this.defineExchangeLayout(c);
     }
 
     /**
@@ -141,7 +141,7 @@ public class ExchangePanel extends JPanel {
             if (fromValueField.getText().isEmpty()) {
                 createEmptyExchangePopup();
             } else {
-                // JComboBox reference: https://docs.oracle.com/javase/8/docs/api/javax/swing/JComboBox.html
+                // Reference: https://docs.oracle.com/javase/8/docs/api/javax/swing/JComboBox.html
                 String fromCurrency = (String) fromCurrencyDropDown.getSelectedItem();
                 String toCurrency = (String) toCurrencyDropDown.getSelectedItem();
                 double amount = Double.parseDouble(fromValueField.getText());

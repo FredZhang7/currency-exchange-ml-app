@@ -28,14 +28,14 @@ public class JsonReader {
     public ExchangeHistory readExchangeHistory() throws IOException {
         ExchangeHistory exchangeHistory = new ExchangeHistory();
 
-        String jsonString = readFile(source);
+        String jsonString = this.readFile(source);
         JSONObject jsonObject = new JSONObject(jsonString);
 
         JSONArray jsonArray = jsonObject.getJSONArray("exchanges");
         for (Object json : jsonArray) {
             // Source: https://stleary.github.io/JSON-java/index.html
             JSONObject exchangeJson = (JSONObject) json;
-            Exchange exchange = parseExchange(exchangeJson);
+            Exchange exchange = this.parseExchange(exchangeJson);
             exchangeHistory.add(exchange);
         }
 
@@ -53,7 +53,7 @@ public class JsonReader {
 
         JSONObject excRatesJson = jsonObject.getJSONObject("excRates");
         HashMap<String, Double> excRates = new HashMap<>();
-        jsonToHashMap(excRates, excRatesJson);
+        this.jsonToHashMap(excRates, excRatesJson);
 
         Exchange exchange = new Exchange(fromCurrency, toCurrency, fromValue, excRates);
         exchange.setToValue(toValue);
@@ -67,11 +67,11 @@ public class JsonReader {
      * throws an IOException if an error occurs when reading data from file
      */
     public HashMap<String, Double> readHashMap() throws IOException {
-        String jsonString = readFile(source);
+        String jsonString = this.readFile(source);
         JSONObject jsonObject = new JSONObject(jsonString);
 
         HashMap<String, Double> map = new HashMap<>();
-        jsonToHashMap(map, jsonObject);
+        this.jsonToHashMap(map, jsonObject);
 
         return map;
     }

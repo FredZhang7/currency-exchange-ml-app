@@ -4,19 +4,20 @@ import persistence.JsonReader;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 // Represents the currency exchange rates of each exchange
-public class ExchangeRates {
-    private HashMap<String, Double> excRates;
+public class LocalExchangeRates {
+    private Map<String, Double> excRates;
 
     /**
      * MODIFIES: this
      * EFFECTS: initializes excRates as a new HashMap,
      *          and loads currency values to excRates
      */
-    public ExchangeRates() throws IOException {
+    public LocalExchangeRates() throws IOException {
         excRates = new HashMap<>();
-        initializeExchangeRates();
+        this.initializeExchangeRates();
     }
 
     /**
@@ -28,7 +29,7 @@ public class ExchangeRates {
         excRates = jsonReader.readHashMap();
     }
 
-    public HashMap<String, Double> getExcRates() {
+    public Map<String, Double> getExcRates() {
         return this.excRates;
     }
 }

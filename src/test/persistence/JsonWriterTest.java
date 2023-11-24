@@ -43,7 +43,7 @@ public class JsonWriterTest {
     void testWriterGeneralExchangeHistory() {
         try {
             ExchangeHistory exchangeHistory = new ExchangeHistory();
-            ExchangeRates rates = new ExchangeRates();
+            LocalExchangeRates rates = new LocalExchangeRates();
             String fromCurrency = "Canadian Dollar (CAD)";
             String toCurrency = "Chinese Yuan (CNY)";
             double fromValue = 100;
