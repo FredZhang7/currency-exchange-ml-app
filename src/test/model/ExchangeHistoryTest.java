@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ExchangeHistoryTests {
+class ExchangeHistoryTest {
     private Exchange exc1;
     private Exchange exc2;
     private Exchange exc3;
