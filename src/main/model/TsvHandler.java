@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.FileWriter;
+
 import java.net.URL;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +18,7 @@ import java.util.HashMap;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TreeMap;
+
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -34,7 +38,7 @@ public class TsvHandler {
     }
 
     /**
-     * REQUIRES: a valid date string in the format "yyyy-MM-dd"
+     * REQUIRES: a valid date string in the format "yyyy-MM-dd", within the range "2003-04-30" and "2023-11-23"
      * EFFECTS: downloads the TSV file from the specified URL and returns the data as a string
      */
     private String downloadTSV(String date) throws IOException {
@@ -55,18 +59,18 @@ public class TsvHandler {
      * REQUIRES: TSV data is downloaded with downloadTSV
      * EFFECTS: parses the TSV data and returns a Map of currencies with the corresponding Map of dates and values
      */
-    public Map<String, Map<String, String>> parseTSV(String tsvData) {
+    protected Map<String, Map<String, String>> parseOnlineTSV(String tsvData) {
         Map<String, Map<String, String>> data = new HashMap<>();
         List<String> lines = Arrays.asList(tsvData.split(System.lineSeparator()));
         String[] headers = null;
 
         for (int i = 1; i < 83; i++) {
-            if (i == 1 || i == 44) {
+            if (i == 1 || i == 43) {
                 headers = lines.get(i).split("\t");
                 continue;
             }
 
-            if (i > 40 && i < 45) {
+            if (i >= 40 && i <= 42) {
                 continue;
             }
 
@@ -77,7 +81,11 @@ public class TsvHandler {
                 history.put(headers[j], values[j]);
             }
 
-            data.put(headers[0], history);
+            if (data.get(values[0]) == null) {
+                data.put(values[0], history);
+            } else {
+                data.get(values[0]).putAll(history);
+            }
         }
 
         return data;
@@ -100,7 +108,7 @@ public class TsvHandler {
 
         for (Date date = start.getTime(); start.before(end); start.add(Calendar.MONTH, 1), date = start.getTime()) {
             String tsvData = this.downloadTSV(sdf.format(date));
-            Map<String, Map<String, String>> data = this.parseTSV(tsvData);
+            Map<String, Map<String, String>> data = this.parseOnlineTSV(tsvData);
 
             for (Map.Entry<String, Map<String, String>> entry : data.entrySet()) {
                 String currency = entry.getKey();
@@ -121,21 +129,19 @@ public class TsvHandler {
      * REQUIRES: combined data from downloadAndCombineTSVs
      * EFFECTS: writes the combined data to a TSV file
      */
-    private void writeCombinedTSV(Map<String, Map<String, String>> combinedData) throws IOException {
+    protected void writeCombinedTSV(Map<String, Map<String, String>> combinedData) throws IOException {
         List<String> lines = new ArrayList<>();
-        String[] headers = combinedData.values().stream().findFirst().get().keySet().toArray(new String[0]);
-        lines.add("Currency\t" + String.join("\t", headers));
+        lines.add("Currency\tDate\tValue");
 
         for (Map.Entry<String, Map<String, String>> entry : combinedData.entrySet()) {
             String currency = entry.getKey();
             Map<String, String> history = entry.getValue();
 
-            List<String> values = new ArrayList<>();
-            for (String header : headers) {
-                values.add(history.get(header).toString());
+            for (Map.Entry<String, String> historyEntry : history.entrySet()) {
+                String date = historyEntry.getKey();
+                String value = historyEntry.getValue();
+                lines.add(currency + "\t" + date + "\t" + value);
             }
-
-            lines.add(currency + "\t" + String.join("\t", values));
         }
 
         Files.write(Paths.get(tsvPath), lines);
@@ -147,14 +153,9 @@ public class TsvHandler {
     public Map<String, Map<String, String>> loadCombinedTSV() throws IOException {
         Map<String, Map<String, String>> data = new HashMap<>();
         List<String> lines = Files.readAllLines(Paths.get(tsvPath));
-        String[] headers = null;
+        String[] headers = lines.get(0).split("\t");
 
-        for (int i = 0; i < lines.size(); i++) {
-            if (i == 0) {
-                headers = lines.get(i).split("\t");
-                continue;
-            }
-
+        for (int i = 1; i < lines.size(); i++) {
             Map<String, String> history = new HashMap<>();
             String[] values = lines.get(i).split("\t");
 
@@ -162,11 +163,12 @@ public class TsvHandler {
                 history.put(headers[j], values[j]);
             }
 
-            data.put(headers[0], history);
+            data.put(values[0], history);
         }
 
         return data;
     }
+
 
     /**
      * EFFECTS: converts the list of lists of strings into a string,
@@ -176,7 +178,7 @@ public class TsvHandler {
         FileWriter csvWriter = new FileWriter(trainPath);
 
         for (List<String> row : allHistories) {
-            csvWriter.append(String.join(",", row));
+            csvWriter.append(String.join("\t", row));
             csvWriter.append("\n");
         }
 

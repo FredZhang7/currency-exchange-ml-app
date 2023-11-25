@@ -81,7 +81,6 @@ public class Database {
         }
     }
 
-
     /**
      * REQUIRES: resultSet is not null and is positioned before the first row
      * MODIFIES: resultSet
