@@ -26,10 +26,10 @@ import java.io.IOException;
 // represents a MySQL database with TSV data recording capabilities
 public class Database {
     private Connection connection;
-    private Statement statement;
     private String name;
     private String username;
     private String password;
+    private Statement statement;
 
     /**
      * MODIFIES: this
@@ -49,8 +49,8 @@ public class Database {
             System.out.println("Connecting to MySQL database...");
             String url = "jdbc:mysql://localhost:3306/" + name + "?serverTimezone=UTC";
             connection = DriverManager.getConnection(url, username, password);
+            this.statement =  connection.createStatement();
             System.out.println(name + " database connected!");
-            this.statement = connection.createStatement();
         } catch (SQLException e) {
             throw new IllegalStateException("Error! Cannot connect to the database!", e);
         }
@@ -104,9 +104,12 @@ public class Database {
      *          and returns the parsed data
      */
     protected Map<String, String> getCurrencyHistory(String currency) throws SQLException {
-        String query = "SELECT Date, Value FROM CurrencyData WHERE Currency = '" + currency + "'";
-        try (ResultSet resultSet = this.statement.executeQuery(query)) {
-            return this.parseHistory(resultSet);
+        String query = "SELECT Date, Value FROM CurrencyData WHERE Currency = ?";
+        try (PreparedStatement preparedStatement = this.connection.prepareStatement(query)) {
+            preparedStatement.setString(1, currency);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return this.parseHistory(resultSet);
+            }
         }
     }
 
@@ -182,7 +185,6 @@ public class Database {
      */
     public void runSqlScript(String filePath) {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-
             String line;
             StringBuilder sql = new StringBuilder();
 
@@ -236,9 +238,5 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setStatement(Statement statement) {
-        this.statement = statement;
     }
 }

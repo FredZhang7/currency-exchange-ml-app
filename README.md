@@ -13,8 +13,8 @@ Users use this app to convert an amount of money from one currency (e.g. CAD) to
 Users make two selections from **31 currencies** locally or **78 currencies** online, enter the amount they want to convert in the "from" currency section, and the app will automatically display the converted amount in the "to" currency section.
 This app is useful to users such as international students, travelers, and people interested in currency exchange.
 
-### 2. Value History (MySQL)
-
+### 2. Historical Currency Values (MySQL)
+Stores TSV data in `Map<String, Map<String, String>>` format by inserting unique rows of Currency (String), Date (String), and Value (String: Double | "NA").
 
 ### 3. Line Graphs (JFreeChart)
 
