@@ -34,7 +34,7 @@ public class TsvHandlerTest {
 
     @Test
     public void testGetTrainPath() {
-        assertEquals(tsvPath.split(".tsv")[0] + "_train.tsv", tsvHandler.getTrainPath());
+        assertEquals("./data/tsvHandlerTest_train.tsv", tsvHandler.getTrainPath());
     }
 
     @Test

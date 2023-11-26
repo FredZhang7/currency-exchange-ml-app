@@ -28,13 +28,13 @@ public class TsvHandler {
     private String trainPath;
 
     /**
-     * REQUIRES: tsvPath ends in ".tsv"
+     * REQUIRES: tsvPath ends in ".tsv" and doesn't contain ".tsv" elsewhere
      * MODIFIES: this
      * EFFECTS: initializes all fields
      */
     public TsvHandler(String tsvPath) {
         this.tsvPath = tsvPath;
-        this.trainPath = tsvPath.split(".tsv")[0] + "_train.tsv";
+        this.trainPath = tsvPath.split("\\.tsv")[0] + "_train.tsv";
     }
 
     /**
