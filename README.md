@@ -15,6 +15,7 @@ This app is useful to users such as international students, travelers, and peopl
 
 ### 2. Historical Currency Values (MySQL)
 Stores TSV data in `Map<String, Map<String, String>>` format by inserting unique rows of Currency (String), Date (String), and Value (String: Double | "NA").
+Safely retrieves data using stored procedures with parameters in SQL scripts or parametrized queries in Java, to prevent SQL injection attacks.
 
 ### 3. Line Graphs (JFreeChart)
 
