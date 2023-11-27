@@ -7,13 +7,18 @@ This project uses Swing for the UI, MySQL and TSV files for historical currency 
 
 ### 1. Currency Convertor (Swing UI)
 
-<img src="./data/phase3_ui.png" alt="Phase 3 UI" width="100%">
+<img src="./data/phase3_ui.png" alt="Phase 3 UI" width="90%">
 
 Users use this app to convert an amount of money from one currency (e.g. CAD) to another (e.g. USD), using data from JSON locally or live TSV data online.
 Users make two selections from **31 currencies** locally or **78 currencies** online, enter the amount they want to convert in the "from" currency section, and the app will automatically display the converted amount in the "to" currency section.
 This app is useful to users such as international students, travelers, and people interested in currency exchange.
 
 ### 2. Historical Currency Values (MySQL)
+
+<img src="./data/sql_table.png" alt="sql table example" width="30%">
+
+*A sample MySQL table that follows the same structure used in this project.*
+
 Stores TSV data in `Map<String, Map<String, String>>` format by inserting unique rows of Currency (String), Date (String), and Value (String: Double | "NA").
 Safely retrieves data using stored procedures with parameters in SQL scripts or parametrized queries in Java, to prevent SQL injection attacks.
 

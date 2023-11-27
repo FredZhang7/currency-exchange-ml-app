@@ -22,7 +22,7 @@ public class DatabaseTest {
     private Map<String, String> cadHistory;
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws SQLException {
         db = new Database("mysql", "fred", "Freddy77!");
         db.connect();
         db.runSqlScript("./data/create_database.sql");
@@ -44,13 +44,13 @@ public class DatabaseTest {
         data = new HashMap<>();
         data.put("USD", usdHistory);
         data.put("CAD", cadHistory);
+
+        db.recordData(data);
     }
 
     @Test
     public void testGetSortedExchangeRates() throws SQLException, ParseException {
         List<String> expected = Arrays.asList("1.23", "1.24", "1.25");
-
-        db.recordData(data);
 
         assertEquals(usdHistory, db.getCurrencyHistory("USD"));
         assertEquals(cadHistory, db.getCurrencyHistory("CAD"));
@@ -61,14 +61,12 @@ public class DatabaseTest {
 
     @Test
     public void testGetAllSortedExchangeRateHistories() throws SQLException, ParseException {
-        db.recordData(data);
-
-        // USD vs CAD
+        // USD vs CAD rate
         List<String> expected = Arrays.asList("1.23", "1.24", "1.25");
         List<String> actual = db.getAllSortedExchangeRateHistories(data).get(0);
         assertEquals(expected, actual);
 
-        // CAD vs USD
+        // CAD vs USD rate
         expected = Arrays.asList(1 / 1.23 + "", 1 / 1.24 + "", 1 / 1.25 + "");
         actual = db.getAllSortedExchangeRateHistories(data).get(1);
         assertEquals(expected, actual);

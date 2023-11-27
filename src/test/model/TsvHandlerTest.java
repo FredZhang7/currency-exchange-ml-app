@@ -71,11 +71,10 @@ public class TsvHandlerTest {
         assertNotNull(combinedData.get("Uruguayan peso").get("February 27, 2015"));
     }
 
-
     @Test
     public void testLoadCombinedTSV() throws IOException {
         List<String> lines = Arrays.asList("Currency\t2023-11-23", "USD\t1.00");
-        Files.write(Path.of(tsvPath), lines);
+        Files.write(Path.of(tsvHandler.getTsvPath()), lines);
 
         Map<String, Map<String, String>> expected = new HashMap<>();
         expected.put("USD", new HashMap<>());
@@ -86,15 +85,15 @@ public class TsvHandlerTest {
     @Test
     public void testSaveToTSV() throws IOException {
         List<List<String>> allHistories = Arrays.asList(
-                Arrays.asList("Currency", "Date", "Value"),
-                Arrays.asList("USD", "November 16, 2023", "1.33")
+                Arrays.asList("January 1, 2022", "April 2, 2022", "May 8, 2023"),
+                Arrays.asList("1.33", "NA", "1.37")
         );
 
         tsvHandler.saveToTSV(allHistories);
 
         List<String> lines = Files.readAllLines(Path.of(tsvHandler.getTrainPath()));
-        assertEquals("Currency\tDate\tValue", lines.get(0));
-        assertEquals("USD\tNovember 16, 2023\t1.33", lines.get(1));
+        assertEquals("January 1, 2022\tApril 2, 2022\tMay 8, 2023", lines.get(0));
+        assertEquals("1.33\tNA\t1.37", lines.get(1));
     }
 
     @Test
@@ -102,12 +101,21 @@ public class TsvHandlerTest {
         Map<String, Map<String, String>> combinedData = new HashMap<>();
         Map<String, String> usdHistory = new HashMap<>();
         usdHistory.put("November 16, 2023", "1.33");
+        usdHistory.put("November 17, 2023", "1.37");
         combinedData.put("USD", usdHistory);
+
+        Map<String, String> cadHistory = new HashMap<>();
+        cadHistory.put("November 16, 2023", "NA");
+        cadHistory.put("November 17, 2023", "1");
+        combinedData.put("CAD", cadHistory);
 
         tsvHandler.writeCombinedTSV(combinedData);
 
         List<String> lines = Files.readAllLines(Path.of(tsvHandler.getTsvPath()));
         assertEquals("Currency\tDate\tValue", lines.get(0));
         assertEquals("USD\tNovember 16, 2023\t1.33", lines.get(1));
+        assertEquals("USD\tNovember 17, 2023\t1.37", lines.get(2));
+        assertEquals("CAD\tNovember 16, 2023\tNA", lines.get(3));
+        assertEquals("CAD\tNovember 17, 2023\t1", lines.get(4));
     }
 }
