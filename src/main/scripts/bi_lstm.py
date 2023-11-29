@@ -12,43 +12,46 @@ import json
 import os
 
 
-def lr_schedule(epoch, initial_lr=0.01):
+def lr_schedule(epoch, initial_lr):
     if epoch < 30:
-        return initial_lr
-    elif epoch < 60:
-        return initial_lr * 0.1
+        return 0.0010
     else:
-        return initial_lr * 0.01
+        return 0.0001
+
+
+def test_model(model, x_test, y_test, decimal_places=[2, 3, 4]):
+    y_pred = model.predict(x_test)
+    accuracies = []
+
+    for dp in decimal_places:
+        y_test_rounded = np.round(y_test, dp)
+        y_pred_rounded = np.round(y_pred, dp)
+        correct_predictions = np.isclose(y_test_rounded, y_pred_rounded, atol=10**-dp)
+        accuracy = np.mean(correct_predictions)
+        accuracies.append(accuracy)
+
+        print(f"Accuracy at {dp} decimal places: {accuracy:.5f}")
+
+    avg_accuracy = np.mean(accuracies)
+    print(f"Average accuracy: {avg_accuracy:.5f}")
+    return avg_accuracy
 
 
 class EpochCallback(Callback):
-    def __init__(self, x_train, y_train, decimal_places=[3, 4, 5]):
+    def __init__(self, x_train, y_train, decimal_places=[2, 3, 4]):
         super().__init__()
         self.x_train = x_train
         self.y_train = y_train
         self.decimal_places = decimal_places
         self.losses = []
-        self.scores = []
+        self.accuracies = []
 
     def on_epoch_end(self, epoch, logs=None):
-        y_pred = self.model.predict(self.x_train)
-        mse = MeanSquaredError()
-        scores = []
-
-        for dp in self.decimal_places:
-            y_train_rounded = np.round(self.y_train, dp)
-            y_pred_rounded = np.round(y_pred, dp)
-            mse.update_state(y_train_rounded, y_pred_rounded)
-            score = mse.result().numpy()
-            scores.append(score)
-
-            print(f"Score at {dp} decimal places: {score:.5f}")
-
-        avg_score = np.mean(scores)
-        self.scores.append(avg_score)
+        avg_accuracy = test_model(self.model, self.x_train, self.y_train)
+        self.accuracies.append(avg_accuracy)
         self.losses.append(logs.get('loss'))
-        print(f"Average score: {avg_score:.5f}")
-        return avg_score
+        print(f"Average accuracy: {avg_accuracy:.5f}")
+        return avg_accuracy
 
 
 class ExchangeRateModel:
@@ -57,9 +60,9 @@ class ExchangeRateModel:
             self.mean = None
             self.std = None
             self.model = Sequential()
-            self.model.add(Conv1D(filters=500, kernel_size=3, activation='silu', input_shape=(1186, 1)))
-            self.model.add(MaxPooling1D(pool_size=2))
-            self.model.add(Bidirectional(LSTM(50, return_sequences=True)))
+#             self.model.add(Conv1D(filters=450, kernel_size=3, activation='silu'))
+#             self.model.add(MaxPooling1D(pool_size=2))
+            self.model.add(Bidirectional(LSTM(50, return_sequences=True), input_shape=(None, 1)))
             self.model.add(Dropout(0.1))
             self.model.add(BatchNormalization())
             self.model.add(Bidirectional(LSTM(50, return_sequences=True)))
@@ -78,11 +81,14 @@ class ExchangeRateModel:
             self.model = load_model("model.h5")
 
 
-    def load_data(self, file_path):
+    def load_data(self, file_path, column_width=31):
         with open(file_path, 'r') as f:
             lines = f.readlines()
 
-        lines = [line for line in lines if len(line.split('\t')) == 1187]
+        if isinstance(column_width, str):
+            column_width = int(column_width)
+
+        lines = [line for line in lines if len(line.split('\t')) == column_width]
 
         with open(file_path, 'w') as f:
             f.writelines(lines)
@@ -145,7 +151,7 @@ class ExchangeRateModel:
                     x_val, y_val = data[val, :-1], data[val, -1]
 
                     self.train_model(x_train, y_train, epochs=epoch, batch_size=batch_size)
-                    score = self.test_model(x_val, y_val)
+                    score = test_model(self.model, x_val, y_val)
                     scores.append(score)
 
                     progress_bar.update()
@@ -185,25 +191,6 @@ class ExchangeRateModel:
         plt.tight_layout()
         plt.show()
         plt.imsave("history.png")
-
-
-    def test_model(self, x_test, y_test, decimal_places=[3, 4, 5]):
-        y_pred = self.model.predict(x_test)
-        mse = MeanSquaredError()
-        scores = []
-
-        for dp in decimal_places:
-            y_test_rounded = np.round(y_test, dp)
-            y_pred_rounded = np.round(y_pred, dp)
-            mse.update_state(y_test_rounded, y_pred_rounded)
-            score = mse.result().numpy()
-            scores.append(score)
-
-            print(f"Score at {dp} decimal places: {score:.5f}")
-
-        avg_score = np.mean(scores)
-        print(f"Average score: {avg_score:.5f}")
-        return avg_score
 
 
     def save_model(self):
