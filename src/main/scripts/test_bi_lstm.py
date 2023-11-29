@@ -1,14 +1,14 @@
 import sys
-import pandas as pd
-import numpy as np
 from bi_lstm import ExchangeRateModel
 
-model = ExchangeRateModel("test")
-model.load_preprocessing_values()
-new_data = np.array(eval(sys.argv[1]))
-new_data = new_data.reshape(1, -1)
-data = model.preprocess_data(new_data)
+file_path = sys.argv[1]
 
-# predictions is 2D
-predictions = model.model.predict(data)
-print(predictions[0][0])
+model = ExchangeRateModel("test")
+data = model.load_data(file_path)
+
+x_test, y_test = data[:, :-1], data[:, -1]
+
+print("x.shape: ", x_test.shape)
+print("y.shape: ", y_test.shape)
+
+model.test_model(x_test, y_test)

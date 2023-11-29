@@ -79,6 +79,7 @@ public class Database {
                 }
             }
         }
+        System.out.println("Data recorded!");
     }
 
     /**
@@ -125,6 +126,10 @@ public class Database {
             if (toCurrencyHistory.containsKey(date)) {
                 String fromString = fromCurrencyHistory.get(date);
                 String toString = toCurrencyHistory.get(date);
+                if (fromString == null || toString == null) {
+                    exchangeRateHistory.put(date, "NA");
+                    continue;
+                }
                 try {
                     Double fromRate = Double.parseDouble(fromString);
                     Double toRate = Double.parseDouble(toString);
@@ -165,6 +170,8 @@ public class Database {
             Map<String, Map<String, String>> data
     ) throws SQLException, ParseException {
         Set<String> currencies = data.keySet();
+        int total = currencies.size() * (currencies.size() - 1);
+        int calculated = 0;
 
         List<List<String>> allHistories = new ArrayList<>();
         for (String fromCurrency : currencies) {
@@ -172,6 +179,8 @@ public class Database {
                 if (!fromCurrency.equals(toCurrency)) {
                     List<String> history = this.getSortedExchangeRates(fromCurrency, toCurrency);
                     allHistories.add(history);
+                    calculated++;
+                    System.out.println(calculated + "/" + total + " exchange rates calculated!");
                 }
             }
         }
@@ -238,5 +247,16 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * EFFECTS: removes the CurrencyData table
+     */
+    public void teardown() {
+        this.runSqlScript("./data/teardown.sql");
+    }
+
+    public Statement getStatement() {
+        return this.statement;
     }
 }

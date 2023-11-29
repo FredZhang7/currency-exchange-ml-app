@@ -1,0 +1,1 @@
+SELECT Currency, COUNT(*) as Count FROM CurrencyData GROUP BY Currency;

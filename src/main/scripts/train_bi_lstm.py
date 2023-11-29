@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 from bi_lstm import ExchangeRateModel
 
 file_path = sys.argv[1]
@@ -6,8 +7,16 @@ file_path = sys.argv[1]
 model = ExchangeRateModel("train")
 data = model.load_data(file_path)
 
-x, y = data[:, :-1], data[:, -1]
+# best_epochs, best_batch_size = model.cross_validate(data)
+# print(f"Best epochs: {best_epochs}, Best batch size: {best_batch_size}")
 
-model.train_model(X, y)
+data = np.array(data)
+x_train, y_train = data[:, :-1], data[:, -1]
+
+print("x.shape: ", x_train.shape)
+print("y.shape: ", y_train.shape)
+
+# model.train_model(x_train, y_train, epochs=best_epochs, batch_size=best_batch_size)
+model.train_model(x_train, y_train, epochs=100, batch_size=8)
 model.save_model()
 model.save_preprocessing_values()

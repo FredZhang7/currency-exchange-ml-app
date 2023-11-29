@@ -4,27 +4,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
 import java.sql.SQLException;
 
 import java.text.ParseException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 // Represents a predictor for exchange rates between two currencies using a TensorFlow model
 public class ExchangeRatePredictor {
-    private String fromCurrency;
-    private String toCurrency;
     private Database db;
     private TsvHandler tsvHandler;
 
     /**
+     * REQUIRES: db is connected
      * MODIFIES: this
      * EFFECTS: initializes all field variables
      */
-    public ExchangeRatePredictor(String fromCurrency, String toCurrency, Database db, String tsvPath) {
-        this.fromCurrency = fromCurrency;
-        this.toCurrency = toCurrency;
+    public ExchangeRatePredictor(Database db, String tsvPath) {
         this.db = db;
         tsvHandler = new TsvHandler(tsvPath);
     }
@@ -35,11 +34,17 @@ public class ExchangeRatePredictor {
      *          gets all sorted exchange histories from the database,
      *          and saves the query to a TSV
      */
-    public void setup() throws IOException, ParseException, SQLException {
-        tsvHandler.downloadAndCombineTSVs("2003-04-30", "2023-11-23");
-        Map<String, Map<String, String>> data = tsvHandler.loadCombinedTSV();
+    public void generateTrainData() throws IOException, ParseException, SQLException {
+        String tsvPath = tsvHandler.getTsvPath();
+
+        tsvHandler.downloadAndCombineTSVs("2019-02-28", "2023-11-30", tsvPath);
+        Map<String, Map<String, String>> data = tsvHandler.loadCombinedTSV(tsvPath);
+        db.runSqlScript("./data/createDatabase.sql");
+
+        db.recordData(data);
+
         List<List<String>> allHistories = db.getAllSortedExchangeRateHistories(data);
-        tsvHandler.saveToTSV(allHistories);
+        tsvHandler.saveToTSV(allHistories, tsvHandler.getTrainPath());
     }
 
     /**
@@ -52,12 +57,43 @@ public class ExchangeRatePredictor {
     }
 
     /**
+     * EFFECTS: downloads new data and merges with the dataset to create the validation data
+     */
+    public void generateValidationData() throws IOException, ParseException, SQLException {
+        String tsvPath = tsvHandler.getTsvPath();
+        String testPath = tsvHandler.getTestPath();
+
+        tsvHandler.downloadAndCombineTSVs("2019-01-01", "2019-01-31", testPath);
+        Map<String, Map<String, String>> data = tsvHandler.loadCombinedTSV(tsvPath);
+        data.putAll(tsvHandler.loadCombinedTSV(testPath));
+
+        db.recordData(data);
+
+        List<List<String>> allHistories = db.getAllSortedExchangeRateHistories(data);
+        allHistories.removeIf(history -> history.size() < 1187);
+
+        List<List<String>> result = new ArrayList<>();
+
+        for (List<String> history : allHistories) {
+            for (int i = 0; i <= history.size() - 1187; i++) {
+                result.add(history.subList(i, i + 1187));
+            }
+        }
+
+        tsvHandler.saveToTSV(result, tsvHandler.getTestPath());
+    }
+
+    /**
      * EFFECTS: predicts the next exchange rate using the model trained on all historical sorted exchange rates
      */
-    public double predict() throws IOException, SQLException, ParseException {
+    public double predict(String fromCurrency, String toCurrency) throws IOException, SQLException, ParseException {
         List<String> sortedExchangeRates = db.getSortedExchangeRates(fromCurrency, toCurrency);
 
-        ProcessBuilder pb = new ProcessBuilder("python", "./scripts/test_bi_lstm.py", sortedExchangeRates.toString());
+        ProcessBuilder pb = new ProcessBuilder(
+                "python",
+                "./scripts/inference_bi_lstm.py",
+                sortedExchangeRates.toString()
+        );
         Process p = pb.start();
 
         BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));

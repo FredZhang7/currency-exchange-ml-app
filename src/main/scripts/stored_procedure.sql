@@ -1,6 +1,6 @@
 /*
 > SELECT Date, Value FROM CurrencyData WHERE Currency = 'Canadian dollar';
-is safe as long as the currency name is not a variable, because an user can
+is safe as long as the currency name is not a variable, because a user can
 inject a malicious script (e.g. "'Canadian dollar'; DROP TABLE CurrencyData;")
 */
 
