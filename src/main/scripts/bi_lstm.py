@@ -19,7 +19,7 @@ def lr_schedule(epoch, initial_lr):
         return 0.0001
 
 
-def test_model(model, x_test, y_test, decimal_places=[2, 3, 4]):
+def test_model(model, x_test, y_test, decimal_places=[2, 3]):
     y_pred = model.predict(x_test)
     accuracies = []
 
@@ -32,9 +32,7 @@ def test_model(model, x_test, y_test, decimal_places=[2, 3, 4]):
 
         print(f"Accuracy at {dp} decimal places: {accuracy:.5f}")
 
-    avg_accuracy = np.mean(accuracies)
-    print(f"Average accuracy: {avg_accuracy:.5f}")
-    return avg_accuracy
+    return accuracies
 
 
 class EpochCallback(Callback):
@@ -47,10 +45,9 @@ class EpochCallback(Callback):
         self.accuracies = []
 
     def on_epoch_end(self, epoch, logs=None):
-        avg_accuracy = test_model(self.model, self.x_train, self.y_train)
-        self.accuracies.append(avg_accuracy)
+        accuracy_array = test_model(self.model, self.x_train, self.y_train)
+        self.accuracies.append(accuracy_array)
         self.losses.append(logs.get('loss'))
-        print(f"Average accuracy: {avg_accuracy:.5f}")
         return avg_accuracy
 
 
@@ -60,21 +57,21 @@ class ExchangeRateModel:
             self.mean = None
             self.std = None
             self.model = Sequential()
-#             self.model.add(Conv1D(filters=450, kernel_size=3, activation='silu'))
+#             self.model.add(Conv1D(filters=250, kernel_size=3, activation='silu', input_shape=(None, 1)))
 #             self.model.add(MaxPooling1D(pool_size=2))
-            self.model.add(Bidirectional(LSTM(50, return_sequences=True), input_shape=(None, 1)))
+            self.model.add(Bidirectional(LSTM(5000, return_sequences=True), input_shape=(None, 1)))
             self.model.add(Dropout(0.1))
             self.model.add(BatchNormalization())
-            self.model.add(Bidirectional(LSTM(50, return_sequences=True)))
-            self.model.add(Dropout(0.1))
-            self.model.add(BatchNormalization())
-            self.model.add(Bidirectional(LSTM(50, return_sequences=True)))
-            self.model.add(Dropout(0.1))
-            self.model.add(BatchNormalization())
-            self.model.add(LSTM(25))
-            self.model.add(Dropout(0.1))
-            self.model.add(BatchNormalization())
-            self.model.add(Dense(50, activation='relu'))
+#             self.model.add(Bidirectional(LSTM(50, return_sequences=True)))
+#             self.model.add(Dropout(0.1))
+#             self.model.add(BatchNormalization())
+#             self.model.add(Bidirectional(LSTM(50, return_sequences=True)))
+#             self.model.add(Dropout(0.1))
+#             self.model.add(BatchNormalization())
+#             self.model.add(Bidirectional(LSTM(25)))
+#             self.model.add(Dropout(0.1))
+#             self.model.add(BatchNormalization())
+#             self.model.add(Dense(50, activation='relu'))
             self.model.add(Dense(1))
             self.model.compile(optimizer=AdamW(), loss='mse')
         else:
@@ -94,6 +91,7 @@ class ExchangeRateModel:
             f.writelines(lines)
 
         data = pd.read_csv(file_path, sep='\t', header=None)
+        # data = data.sample(frac=0.5, random_state=42)
         data = data.replace("NA", np.nan)
         data = data.fillna(data.mean())
 
@@ -151,7 +149,7 @@ class ExchangeRateModel:
                     x_val, y_val = data[val, :-1], data[val, -1]
 
                     self.train_model(x_train, y_train, epochs=epoch, batch_size=batch_size)
-                    score = test_model(self.model, x_val, y_val)
+                    score = np.mean(test_model(self.model, x_val, y_val))
                     scores.append(score)
 
                     progress_bar.update()
@@ -182,15 +180,20 @@ class ExchangeRateModel:
         plt.legend()
 
         plt.subplot(1, 2, 2)
-        plt.plot(epochs, callback.scores, 'y', label='Training Accuracy')
-        plt.title('Custom score')
+        for i in range(len(callback.accuracies[0]):
+            accuracies = []
+            colors = ['g', 'y', 'm', 'r', 'k']
+            for i in range(len(callback.accuracies)):
+                accuracies.append(callback.accuracies[i])
+            plt.plot(epochs, accuracies, colors[i], label='Training Accuracy')
+        plt.title('Training Accuracy')
         plt.xlabel('Epochs')
-        plt.ylabel('Score')
+        plt.ylabel('Accuracy (%)')
         plt.legend()
 
         plt.tight_layout()
         plt.show()
-        plt.imsave("history.png")
+        plt.savefig("history.png")
 
 
     def save_model(self):

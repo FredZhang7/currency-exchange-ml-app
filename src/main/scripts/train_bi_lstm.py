@@ -18,6 +18,6 @@ print("x.shape: ", x_train.shape)
 print("y.shape: ", y_train.shape)
 
 # model.train_model(x_train, y_train, epochs=best_epochs, batch_size=best_batch_size)
-model.train_model(x_train, y_train, epochs=50, batch_size=50)
+model.train_model(x_train, y_train, epochs=30, batch_size=8)
 model.save_model()
 model.save_preprocessing_values()
