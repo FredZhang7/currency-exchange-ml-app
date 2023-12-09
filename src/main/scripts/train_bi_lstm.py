@@ -6,7 +6,7 @@ file_path = sys.argv[1]
 column_width = sys.argv[2]
 
 model = ExchangeRateModel("train")
-data = model.load_data(file_path, column_width)
+data = model.load_data(file_path, column_width, fraction=0.8)
 
 # best_epochs, best_batch_size = model.cross_validate(data)
 # print(f"Best epochs: {best_epochs}, Best batch size: {best_batch_size}")
